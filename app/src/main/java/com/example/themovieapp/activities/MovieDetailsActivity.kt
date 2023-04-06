@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.example.themovieapp.R
 import com.example.themovieapp.data.models.MovieModels
@@ -21,7 +22,7 @@ class MovieDetailsActivity : AppCompatActivity() {
     companion object{
         private const val EXTRA_MOVIE_ID = "EXTRA_MOVIE_ID"
         fun newIntent(context: Context,movieId: Int):Intent{
-           val intent = Intent(context,MovieDetailsActivity::class.java)
+            val intent = Intent(context,MovieDetailsActivity::class.java)
             intent.putExtra(EXTRA_MOVIE_ID,movieId)
             return intent
         }
@@ -43,20 +44,20 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         val movieId = intent?.getIntExtra(EXTRA_MOVIE_ID,0)
         movieId?.let {
-           requestData(it)
+            requestData(it)
         }
     }
 
     private fun requestData(movieId: Int){
         mMovieModels.getMovieDetails(
             movieId = movieId.toString(),
-            onSuccess = {
-                bindData(it)
-            },
             onFailure = {
-
+                showError(it)
             }
-        )
+
+        )?.observe(this){
+            bindData(it)
+        }
         mMovieModels.getCreditsByMovie(
             movieId = movieId.toString(),
             onSuccess = {
@@ -69,6 +70,11 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         )
     }
+
+    private fun showError(failure: String) {
+        Toast.makeText(this,failure,Toast.LENGTH_SHORT).show()
+    }
+
     private fun setUpListeners(){
         btnBack.setOnClickListener {
             super.onBackPressed()

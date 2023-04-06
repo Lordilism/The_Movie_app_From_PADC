@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.themovieapp">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".MovieApplication"
@@ -17,9 +17,12 @@
         android:theme="@style/Theme.TheMovieApp"
         tools:targetApi="31">
         <activity
+            android:name=".activities.MovieSearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.MovieDetailsActivity"
-            android:theme="@style/Theme.TheMovieApp.TransparentStatusBar"
             android:exported="false"
+            android:theme="@style/Theme.TheMovieApp.TransparentStatusBar"
             tools:ignore="AppLinkUrlError">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -28,9 +31,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="http"
                     android:host="themovieapp.com"
-                    android:pathPrefix="/recipe/" />
+                    android:pathPrefix="/recipe/"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
         <activity

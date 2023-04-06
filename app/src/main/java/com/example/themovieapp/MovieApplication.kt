@@ -8,6 +8,6 @@ class MovieApplication:Application() {
     override fun onCreate() {
         super.onCreate()
 
-        MovieModelsImpl.initDatabase(applicationContext)
+        MovieModelsImpl.initDataBase(applicationContext)
     }
 }

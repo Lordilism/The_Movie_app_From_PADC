@@ -19,6 +19,9 @@ const val API_GET_CREDITS_BY_MOVIE = "/3/movie"
 const val PARAM_API_KEY = "api_key"
 const val PARAM_PAGE = "page"
 const val PARAM_GENRE_ID = "with_genres"
+const val API_SEARCH_MOVIES = "/3/search/movie"
+
+const val PARAM_QUERY = "query"
 
 
 const val MOVIE_API_KEY = "9775f2310284a6035ad2c5372b521a8b"
