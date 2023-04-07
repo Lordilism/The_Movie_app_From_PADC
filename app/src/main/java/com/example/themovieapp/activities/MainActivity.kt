@@ -14,6 +14,8 @@ import com.example.themovieapp.data.vos.MovieVO
 import com.example.themovieapp.mvp.presenters.MainPresenter
 import com.example.themovieapp.mvp.presenters.MainPresenterImpl
 import com.example.themovieapp.mvp.views.MainView
+import com.example.themovieapp.router.navigateToMovieDetails
+import com.example.themovieapp.router.navigateToMovieSearch
 import com.example.themovieapp.viewpods.ActorListViewPods
 import com.example.themovieapp.viewpods.MovieListViewPods
 import com.google.android.material.tabs.TabLayout
@@ -89,7 +91,7 @@ class MainActivity : MainView, BaseActivity() {
     }
 
     override fun navigateToMovieDetailsScreen(movieId: Int) {
-        startActivity(MovieDetailsActivity.newIntent(this, movieId))
+        navigateToMovieDetails(movieId)
     }
 
     override fun showError(errorString: String) {
@@ -162,7 +164,7 @@ class MainActivity : MainView, BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.actionSearch -> {
-                startActivity(MovieSearchActivity.newIntent(this))
+                navigateToMovieSearch()
                 true
             }
             else -> {

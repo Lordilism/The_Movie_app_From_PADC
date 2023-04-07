@@ -5,14 +5,16 @@ import androidx.lifecycle.ViewModel
 import com.example.themovieapp.data.models.MovieModels
 import com.example.themovieapp.data.models.MovieModelsImpl
 import com.example.themovieapp.data.vos.GenreVO
+import com.example.themovieapp.interactors.MovieInteractor
+import com.example.themovieapp.interactors.MovieInteractorImpl
 import com.example.themovieapp.mvp.views.MainView
 
 class MainPresenterImpl : ViewModel(), MainPresenter {
     //view
     var mView: MainView? = null
 
-    //Model
-    private val mMovieModel: MovieModels = MovieModelsImpl
+    //Presenter
+    private val mMovieInteractor: MovieInteractor = MovieInteractorImpl()
 
     //states
     private var mGenres: List<GenreVO>? = listOf()
@@ -23,7 +25,7 @@ class MainPresenterImpl : ViewModel(), MainPresenter {
 
     override fun onTapGenre(genrePosition: Int) {
         mGenres?.getOrNull(genrePosition)?.id?.let { genreId ->
-            mMovieModel.getMoviesByGenres(genreId.toString(), onSuccess = {
+            mMovieInteractor.getMoviesByGenres(genreId.toString(), onSuccess = {
                 mView?.showMoviesByGenre(it)
             }, onFailure = {
                 mView?.showError(it)
@@ -46,28 +48,28 @@ class MainPresenterImpl : ViewModel(), MainPresenter {
 
     override fun onUiReady(owner: LifecycleOwner) {
         //Now Playing
-        mMovieModel.getNowPlayingMovies {
+        mMovieInteractor.getNowPlayingMovies {
             mView?.showError(it)
         }?.observe(owner) {
             mView?.showNowPlayingMovies(it)
         }
 
         //Popular
-        mMovieModel.getPopularMovies {
+        mMovieInteractor.getPopularMovies {
             mView?.showError(it)
         }?.observe(owner) {
             mView?.showPopularMovies(it)
         }
 
         //Top Rated Movies
-        mMovieModel.getTopRatedMovies {
+        mMovieInteractor.getTopRatedMovies {
             mView?.showError(it)
         }?.observe(owner) {
             mView?.showTopRatedMovies(it)
         }
 
         //Genre and Get Movie For First Genre
-        mMovieModel.getGenres(
+        mMovieInteractor.getGenres(
             onSuccess = {
                 mGenres = it
                 mView?.showGenres(it)
@@ -80,7 +82,7 @@ class MainPresenterImpl : ViewModel(), MainPresenter {
         )
 
         //Actors
-        mMovieModel.getActors(
+        mMovieInteractor.getActors(
             onSuccess = {
                 mView?.showActors(it)
             },
