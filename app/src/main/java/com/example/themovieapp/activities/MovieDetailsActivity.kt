@@ -7,17 +7,19 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.themovieapp.R
 import com.example.themovieapp.data.models.MovieModels
 import com.example.themovieapp.data.models.MovieModelsImpl
 import com.example.themovieapp.data.vos.GenreVO
 import com.example.themovieapp.data.vos.MovieVO
+import com.example.themovieapp.mvvm.MovieDetailsViewModel
 import com.example.themovieapp.utils.IMAGE_BASE_URL
 import com.example.themovieapp.viewpods.ActorListViewPods
 import kotlinx.android.synthetic.main.activity_movie_details.*
 
-class MovieDetailsActivity : AppCompatActivity() {
+class MovieDetailsActivity : BaseActivity(){
 
     companion object{
         private const val EXTRA_MOVIE_ID = "EXTRA_MOVIE_ID"
@@ -28,7 +30,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private val mMovieModels: MovieModels = MovieModelsImpl
+    private lateinit var mMovieModel: MovieDetailsViewModel
 
     private lateinit var actorsViewPod : ActorListViewPods
     private lateinit var creatorsViewPod : ActorListViewPods
@@ -37,39 +39,46 @@ class MovieDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_details)
 
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
+
+        val movieId = intent?.getIntExtra(EXTRA_MOVIE_ID,0)
+        movieId?.let {
+            setUpViewModel(movieId)
+        }
+
+
+
 
 
         setUpViewPods()
         setUpListeners()
 
-        val movieId = intent?.getIntExtra(EXTRA_MOVIE_ID,0)
-        movieId?.let {
-            requestData(it)
-        }
+        observeLiveData()
+
+
+
     }
 
-    private fun requestData(movieId: Int){
-        mMovieModels.getMovieDetails(
-            movieId = movieId.toString(),
-            onFailure = {
-                showError(it)
+    private fun observeLiveData() {
+        mMovieModel.movieDetailsLiveData?.observe(this){
+            it?.let {movieVo->
+                bindData(movieVo)
             }
-
-        )?.observe(this){
-            bindData(it)
         }
-        mMovieModels.getCreditsByMovie(
-            movieId = movieId.toString(),
-            onSuccess = {
-                actorsViewPod.setData(it.first)
-                creatorsViewPod.setData(it.second)
-            },
-            onFailure = {
 
-            }
-
-        )
+        mMovieModel.castLiveData.observe(this,actorsViewPod::setData)
+        mMovieModel.crewLiveData.observe(this, creatorsViewPod::setData)
     }
+
+    private fun setUpViewModel(movieId: Int) {
+        mMovieModel = ViewModelProvider(this)[MovieDetailsViewModel::class.java]
+        mMovieModel.getInitialData(movieId)
+    }
+
+
 
     private fun showError(failure: String) {
         Toast.makeText(this,failure,Toast.LENGTH_SHORT).show()

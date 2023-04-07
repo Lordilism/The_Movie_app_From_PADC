@@ -40,7 +40,7 @@ interface MovieModels {
     fun getMovieDetails(
         movieId: String,
         onFailure: (String) -> Unit
-    ): LiveData<MovieVO>?
+    ): LiveData<MovieVO?>?
 
     fun getCreditsByMovie(
         movieId: String,

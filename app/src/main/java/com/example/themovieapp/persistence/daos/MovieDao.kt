@@ -19,7 +19,7 @@ interface MovieDao {
     fun getAllMovies(): LiveData<List<MovieVO>>
 
     @Query("SELECT * FROM movies WHERE id= :movieId")
-    fun getMovieById(movieId: Int):LiveData<MovieVO>?
+    fun getMovieById(movieId: Int):LiveData<MovieVO?>?
 
     @Query("SELECT * FROM movies WHERE id = :movieId")
     fun getMovieByIdOneTime(movieId: Int):MovieVO?

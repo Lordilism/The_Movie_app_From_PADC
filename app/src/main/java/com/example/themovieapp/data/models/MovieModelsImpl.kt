@@ -124,7 +124,7 @@ object MovieModelsImpl : MovieModels, BaseModel() {
     override fun getMovieDetails(
         movieId: String,
         onFailure: (String) -> Unit,
-    ): LiveData<MovieVO>? {
+    ): LiveData<MovieVO?>? {
         //Database
 //        val movieFromDatabase = mMovieDatabase?.movieDao()?.getMovieById(movieId = movieId.toInt())
 //        movieFromDatabase?.let {
